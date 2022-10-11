@@ -34,6 +34,10 @@ class AsyncElegantOtaClass{
             begin(AsyncWebServer *server, const char* username = "", const char* password = ""),
             loop(),
             restart();
+        
+        // Returns whether we're updating the firmware (accessing the flash) or not
+		bool want_to_update(){ return _want_to_update; }
+		void can_update(){ _can_update = true; }
 
     private:
         AsyncWebServer *_server;
@@ -44,6 +48,10 @@ class AsyncElegantOtaClass{
         String _username = "";
         String _password = "";
         bool _authRequired = false;
+        
+        // Add this to know what's happening
+		bool _want_to_update = false;
+		bool _can_update = false;
 
 };
 

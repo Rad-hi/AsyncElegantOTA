@@ -78,9 +78,17 @@ void AsyncElegantOtaClass::begin(AsyncWebServer *server, const char* username, c
                 Update.runAsync(true);
                 size_t fsSize = ((size_t) &_FS_end - (size_t) &_FS_start);
                 uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
+                // Modified here @Rad-hi
+                _want_to_update = true;
+                while(!_can_update){ delay(10); yield(); }
+                _can_update = false;
                 if (!Update.begin((cmd == U_FS)?fsSize:maxSketchSpace, cmd)){ // Start with max available size
             #elif defined(ESP32)
                 int cmd = (filename == "filesystem") ? U_SPIFFS : U_FLASH;
+                // Modified here @Rad-hi
+                _want_to_update = true;
+                while(!_can_update){ delay(10); yield(); }
+                _can_update = false;
                 if (!Update.begin(UPDATE_SIZE_UNKNOWN, cmd)) { // Start with max available size
             #endif
                 Update.printError(Serial);
